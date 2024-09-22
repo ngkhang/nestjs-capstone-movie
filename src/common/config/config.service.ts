@@ -5,10 +5,10 @@ import { ConfigService as NestConfigService } from '@nestjs/config';
 @Injectable()
 export class ConfigService {
   constructor(
-    private readonly configService: NestConfigService<AllConfigType>,
+    private readonly nestConfigService: NestConfigService<AllConfigType>,
   ) {}
 
   get app(): AppConfigType {
-    return this.configService.get<AppConfigType>('app');
+    return this.nestConfigService.get<AppConfigType>('app');
   }
 }

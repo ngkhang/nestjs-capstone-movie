@@ -3,8 +3,9 @@ import { AppModule } from './app.module';
 
 import * as express from 'express';
 
+import { ConfigService } from '@config/config.service';
 import { setupSwagger } from './common/swagger/swagger.util';
-import { ConfigService } from './common/config/config.service';
+
 import helmet from 'helmet';
 
 async function bootstrap() {

@@ -1,11 +1,12 @@
-import { AllConfigType } from './config.type';
+import { registerAs } from '@nestjs/config';
+import { AppConfigType } from './config.type';
 
-// Initial
-const DEFAULT_APP_PORT = 3000;
+export const appConfig = registerAs(
+  'app',
+  (): AppConfigType => ({
+    host: process.env.MY_APP_HOST || 'localhost',
+    port: parseInt(process.env.MY_APP_PORT, 10) || 3000,
+  }),
+);
 
-export default (): AllConfigType => ({
-  app: {
-    host: process.env.APP_HOST || 'localhost',
-    port: parseInt(process.env.APP_PORT, 10) || DEFAULT_APP_PORT,
-  },
-});
+export default [appConfig];
