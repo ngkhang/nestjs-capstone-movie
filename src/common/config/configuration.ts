@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { AppConfigType } from './config.type';
+import { AppConfigType, AuthConfigType } from './config.type';
 
 export const appConfig = registerAs(
   'app',
@@ -9,4 +9,13 @@ export const appConfig = registerAs(
   }),
 );
 
-export default [appConfig];
+export const jwtConfig = registerAs(
+  'auth',
+  (): AuthConfigType => ({
+    passportSecret: process.env.AUTH_PASSPORT_SECRET || 'jwt',
+    jwtSecret: process.env.AUTH_JWT_SECRET || 'jwt-secret',
+    jwtExpiresIn: process.env.AUTH_JWT_TOKEN_EXPIRES_IN || '1h',
+  }),
+);
+
+export default [appConfig, jwtConfig];
