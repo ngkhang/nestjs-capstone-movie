@@ -2,6 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@config/config.service';
+import { TokenVerifyType } from 'src/shared/types/common.schema';
 
 @Injectable()
 /*
@@ -11,7 +12,8 @@ import { ConfigService } from '@config/config.service';
 */
 export class JwtStrategy extends PassportStrategy(
   Strategy,
-  'passport-secret-movie', // FIXME: Convert using env variable
+  // FIXME: Convert using env variable
+  'passport-jwt',
 ) {
   constructor(configService: ConfigService) {
     const { jwtSecret } = configService.auth;
@@ -24,8 +26,9 @@ export class JwtStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: TokenVerifyType) {
     // Handle validate role (if needed)
-    return { userId: payload.sub, username: payload.username };
+    console.log('JWT Strategy Payload:', payload);
+    return payload;
   }
 }

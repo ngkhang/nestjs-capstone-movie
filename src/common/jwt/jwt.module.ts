@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { JwtModule as NestJwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@config/config.module';
 import { ConfigService } from '@config/config.service';
+import { JwtStrategy } from './jwt.strategy';
 
 @Global()
 @Module({
@@ -23,5 +24,6 @@ import { ConfigService } from '@config/config.service';
     }),
   ],
   exports: [NestJwtModule],
+  providers: [JwtStrategy],
 })
 export class JwtModule {}

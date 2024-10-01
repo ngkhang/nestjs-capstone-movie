@@ -29,11 +29,17 @@ class EnvironmentVariables {
   // Validate Passport env
   @IsString()
   AUTH_PASSPORT_SECRET: string;
+
   // Validate JWT env
   @IsString()
   AUTH_JWT_SECRET: string;
   @IsString()
-  AUTH_JWT_TOKEN_EXPIRES_IN: string;
+  AUTH_JWT_EXPIRATION_TIME: string;
+
+  @IsString()
+  AUTH_JWT_REFRESH_SECRET: string;
+  @IsString()
+  AUTH_JWT_REFRESH_EXPIRATION_TIME: string;
 }
 
 export function validate(config: Record<string, unknown>) {

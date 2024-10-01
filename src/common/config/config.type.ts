@@ -4,9 +4,11 @@ export interface AppConfigType {
 }
 
 export interface AuthConfigType {
-  jwtSecret: string;
   passportSecret: string;
+  jwtSecret: string;
   jwtExpiresIn: string;
+  jwtRefreshSecret: string;
+  jwtRefreshExpiresIn: string;
 }
 
 export interface AllConfigType {
