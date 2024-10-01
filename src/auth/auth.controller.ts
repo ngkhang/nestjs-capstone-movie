@@ -1,6 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto, CreateUserDto } from 'src/shared/types/user.schema';
+import { LoginAuthDto, ResLogin } from './dto/login-auth.dto';
+import { RegisterAuthDto, ResRegister } from './dto/register-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -8,13 +9,17 @@ export class AuthController {
 
   // TODO: Handle login
   @Post('login')
-  async login(@Body() userLogin: LoginUserDto) {
+  async login(@Body() userLogin: LoginAuthDto): Promise<ResLogin> {
     return this.authService.login(userLogin);
   }
 
   // TODO: Handle sign up
-  @Post('sign-up')
-  async signUp(@Body() userSignUp: CreateUserDto) {
-    return this.authService.signUp(userSignUp);
+  @Post('register')
+  async register(@Body() userRegister: RegisterAuthDto): Promise<ResRegister> {
+    return this.authService.register(userRegister);
   }
+
+  // TODO: Handle refresh token
+  // TODO: Handle reset password
+  // TODO: Handle forget password
 }
