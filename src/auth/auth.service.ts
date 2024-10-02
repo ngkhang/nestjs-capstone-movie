@@ -103,6 +103,8 @@ export class AuthService {
 
       // 3. Hashing password and create new account
       const passwordHasing = await passwordService.hashing(password);
+
+      // TODO: Handle only Admin must role=Admin
       const getRole = await this.prismaService.role.findUnique({
         where: {
           name: role || 'User',

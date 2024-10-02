@@ -1,24 +1,61 @@
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { Request } from 'express';
 import {
   LoginReturnType,
   RefreshReturnType,
   RegisterReturnType,
 } from './dto/auth.dto';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('auth')
+@ApiTags('Auth')
+@Controller('api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiOperation({ summary: 'Login user' })
+  @ApiBody({
+    type: LoginAuthDto,
+    examples: {
+      example_1: {
+        value: {
+          email: 'admin@example.com',
+          password: 'password123',
+        } as LoginAuthDto,
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Success' })
   async login(@Body() userLogin: LoginAuthDto): Promise<LoginReturnType> {
     return this.authService.login(userLogin);
   }
 
   @Post('register')
+  @ApiOperation({ summary: 'Register user' })
+  @ApiBody({
+    type: RegisterAuthDto,
+    examples: {
+      example_1: {
+        value: {
+          email: 'user1@gmail.com',
+          password: '12345',
+          username: 'user01',
+          full_name: 'User 1',
+          phone: '0901212999',
+          avatar: '',
+          address: '',
+          dob: '26/02/2000',
+          role: 'User',
+        } as RegisterAuthDto,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+  })
   async register(
     @Body() userRegister: RegisterAuthDto,
   ): Promise<RegisterReturnType> {
@@ -26,10 +63,26 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  async refreshTokens(@Req() req: Request): Promise<RefreshReturnType> {
-    const token = req.headers.authorization;
-    const cleanToken = token.startsWith('Bearer ') ? token.slice(7) : token;
-    return this.authService.refreshTokens(cleanToken);
+  @ApiOperation({ summary: 'Refresh token' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        token: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+  })
+  async refreshTokens(
+    @Body() userRefreshToken: { token: string },
+  ): Promise<RefreshReturnType> {
+    const { token } = userRefreshToken;
+    return this.authService.refreshTokens(token);
   }
   // TODO: Handle reset password
   // TODO: Handle forget password
