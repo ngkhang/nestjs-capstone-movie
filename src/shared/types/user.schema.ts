@@ -1,27 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
 import {
   IsEmail,
+  IsISO8601,
   IsNotEmpty,
   IsOptional,
   IsString,
-  Validate,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
 } from 'class-validator';
-
-@ValidatorConstraint({ name: 'isDateFormat' })
-export class IsDateFormat implements ValidatorConstraintInterface {
-  validate(str: Date): boolean {
-    // BUG: Fix regex -  "message": "Server Error"
-    const patternDate =
-      /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-    const day = str.getDate();
-    const month = str.getMonth();
-    const year = str.getFullYear();
-    return new RegExp(patternDate).test(`${day}/${month}/${year}`);
-  }
-}
 
 export class CreateUserDto {
   @ApiProperty({
@@ -59,18 +43,12 @@ export class CreateUserDto {
   @IsString()
   phone?: string;
 
-  // NOTE: Refactor
   @ApiProperty({
     example: '  ',
-    description: 'Date of birth in format dd/mm/yyyy',
+    description: 'Date of birth in format yyyy-mm-dd',
   })
   @IsOptional()
-  @Validate(IsDateFormat, { message: 'DOB must be in format dd/mm/yyyy' })
-  @Transform(({ value }) => {
-    if (!value) return undefined;
-    const [day, month, year] = value.split('/');
-    return new Date(Date.UTC(+year, +month - 1, +day));
-  })
+  @IsISO8601({ strict: true }, { message: 'DOB must be in format yyyy-mm-dd' })
   dob?: string;
 
   @ApiProperty({

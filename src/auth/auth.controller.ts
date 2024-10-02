@@ -46,7 +46,7 @@ export class AuthController {
           phone: '0901212999',
           avatar: '',
           address: '',
-          dob: '26/02/2000',
+          dob: '2024-10-02',
           role: 'User',
         } as RegisterAuthDto,
       },

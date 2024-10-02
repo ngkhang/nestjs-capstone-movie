@@ -116,6 +116,7 @@ export class AuthService {
         data: {
           ...rawNewUser,
           password: passwordHasing,
+          dob: rawNewUser.dob ? new Date(rawNewUser.dob) : null,
           role_id: getRole.role_id,
         },
       });
