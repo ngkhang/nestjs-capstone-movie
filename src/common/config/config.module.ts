@@ -11,9 +11,11 @@ import { ConfigService } from './config.service';
       load: configuration,
       validate,
       // TODO: handle env file (if needed)
+      envFilePath: ['.env'],
       // envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
     }),
   ],
   providers: [ConfigService],
+  exports: [NestConfigModule, ConfigService],
 })
 export class ConfigModule {}

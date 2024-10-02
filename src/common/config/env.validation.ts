@@ -22,8 +22,24 @@ class EnvironmentVariables {
   @Max(65535)
   MY_APP_PORT: number;
 
+  // Validate Database env
   @IsString()
   DATABASE_URL: string;
+
+  // Validate Passport env
+  @IsString()
+  AUTH_PASSPORT_SECRET: string;
+
+  // Validate JWT env
+  @IsString()
+  AUTH_JWT_SECRET: string;
+  @IsString()
+  AUTH_JWT_EXPIRATION_TIME: string;
+
+  @IsString()
+  AUTH_JWT_REFRESH_SECRET: string;
+  @IsString()
+  AUTH_JWT_REFRESH_EXPIRATION_TIME: string;
 }
 
 export function validate(config: Record<string, unknown>) {

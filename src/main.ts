@@ -7,6 +7,8 @@ import { ConfigService } from '@config/config.service';
 import { setupSwagger } from './common/swagger/swagger.util';
 
 import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
+import { CustomResponseInterceptor } from './config/response.interceptor';
 
 async function bootstrap() {
   // Define port, config server
@@ -29,6 +31,12 @@ async function bootstrap() {
 
   // Define static assets folder
   app.use(express.static('.'));
+
+  // Add ValidationPipe
+  app.useGlobalPipes(new ValidationPipe());
+
+  // Apply Response Interceptor
+  app.useGlobalInterceptors(new CustomResponseInterceptor());
 
   // Setup Swagger
   setupSwagger(app);
