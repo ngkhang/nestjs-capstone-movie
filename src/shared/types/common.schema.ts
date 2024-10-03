@@ -4,3 +4,8 @@ export interface TokenVerifyType {
   iat: number;
   exp: number;
 }
+
+export class ReturnType<T> {
+  data: T;
+  message?: string | 'Success';
+}
