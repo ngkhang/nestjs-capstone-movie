@@ -1,13 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { RegisterAuthDto } from './dto/register-auth.dto';
-import {
-  LoginReturnType,
-  RefreshReturnType,
-  RegisterReturnType,
-} from './dto/auth.dto';
+import { RegisterAuthDto, RegisterType } from './dto/register-auth.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ResponseType } from 'src/shared/types/common/return.type';
+import { TokenReturnType } from 'src/shared/types/common/token.type';
 
 @ApiTags('Auth')
 @Controller('api/v1/auth')
@@ -28,7 +25,9 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 201, description: 'Success' })
-  async login(@Body() userLogin: LoginAuthDto): Promise<LoginReturnType> {
+  async login(
+    @Body() userLogin: LoginAuthDto,
+  ): Promise<ResponseType<TokenReturnType>> {
     return this.authService.login(userLogin);
   }
 
@@ -58,7 +57,7 @@ export class AuthController {
   })
   async register(
     @Body() userRegister: RegisterAuthDto,
-  ): Promise<RegisterReturnType> {
+  ): Promise<ResponseType<RegisterType>> {
     return this.authService.register(userRegister);
   }
 
@@ -80,7 +79,7 @@ export class AuthController {
   })
   async refreshTokens(
     @Body() userRefreshToken: { token: string },
-  ): Promise<RefreshReturnType> {
+  ): Promise<ResponseType<TokenReturnType>> {
     const { token } = userRefreshToken;
     return this.authService.refreshTokens(token);
   }

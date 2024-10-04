@@ -6,10 +6,10 @@ import {
   // UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
-import { ChangePasswordDto, UpdateUserDto } from './dto/update-user.dto';
-import { ReturnType } from 'src/shared/types/common.schema';
-import { UpdateUserProfileDto, UserDto } from 'src/shared/types/user.schema';
 import { passwordService } from 'src/utils/password.util';
+import { ResponseType } from 'src/shared/types/common/return.type';
+import { ChangePasswordDto, UpdateUserProfileDto } from './dto/update-user.dto';
+import { UserDto } from 'src/shared/types/user.dto';
 
 @Injectable()
 export class UserService {
@@ -18,7 +18,9 @@ export class UserService {
   private userPrisma = this.prismaService.user;
 
   // Get all role of account
-  async getAllRols(): Promise<ReturnType<{ roleId: number; name: string }[]>> {
+  async getAllRols(): Promise<
+    ResponseType<{ roleId: number; name: string }[]>
+  > {
     try {
       const roles = await this.prismaService.role.findMany();
 
@@ -45,7 +47,7 @@ export class UserService {
   }
 
   // Get all users
-  async getAllUser(): Promise<ReturnType<UpdateUserDto[]>> {
+  async getAllUser(): Promise<ResponseType<UserDto[]>> {
     try {
       const users = await this.userPrisma.findMany();
       return {
@@ -60,7 +62,7 @@ export class UserService {
   }
 
   // Get user by userId
-  async getUserById(userId: number): Promise<ReturnType<UpdateUserDto>> {
+  async getUserById(userId: number): Promise<ResponseType<UserDto>> {
     try {
       const user = await this.userPrisma.findUnique({
         where: {
@@ -83,7 +85,7 @@ export class UserService {
   }
 
   // Get search user by name
-  async getUserByName(name: string): Promise<ReturnType<UpdateUserDto[]>> {
+  async getUserByName(name: string): Promise<ResponseType<UserDto[]>> {
     try {
       const users = await this.userPrisma.findMany({
         where: {
@@ -115,7 +117,7 @@ export class UserService {
   async updateProfile(
     userId: number,
     userInfo: UpdateUserProfileDto,
-  ): Promise<ReturnType<UserDto>> {
+  ): Promise<ResponseType<UserDto>> {
     // 1. Get user by ID
     const currentInfo = await this.userPrisma.findUnique({
       where: {
@@ -161,7 +163,7 @@ export class UserService {
   async changePassword(
     userId: number,
     body: ChangePasswordDto,
-  ): Promise<ReturnType<[]>> {
+  ): Promise<ResponseType<string>> {
     try {
       const { newPassword, oldPassword } = body;
       // 1. Get user from db
@@ -188,7 +190,7 @@ export class UserService {
       });
 
       return {
-        data: [],
+        data: '',
         message: 'Change password is successful',
       };
     } catch (error) {
@@ -201,7 +203,7 @@ export class UserService {
   async uploadAvatar(
     fileURL: string,
     userId: number,
-  ): Promise<ReturnType<string>> {
+  ): Promise<ResponseType<string>> {
     const user = this.userPrisma.findUnique({
       where: {
         user_id: userId,

@@ -5,7 +5,7 @@ export interface TokenVerifyType {
   exp: number;
 }
 
-export class ReturnType<T> {
-  data: T;
-  message?: string | 'Success';
+export interface TokenReturnType {
+  token: string;
+  refreshToken: string;
 }

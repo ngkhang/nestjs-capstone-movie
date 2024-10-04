@@ -8,15 +8,13 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
 import { ConfigService } from '@config/config.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { RegisterAuthDto } from './dto/register-auth.dto';
+import { RegisterAuthDto, RegisterType } from './dto/register-auth.dto';
 import {
-  LoginReturnType,
-  RefreshReturnType,
-  RegisterReturnType,
   TokenReturnType,
-} from './dto/auth.dto';
-import { TokenVerifyType } from 'src/shared/types/common.schema';
+  TokenVerifyType,
+} from 'src/shared/types/common/token.type';
 import { passwordService } from 'src/utils/password.util';
+import { ResponseType } from 'src/shared/types/common/return.type';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +26,7 @@ export class AuthService {
 
   private user = this.prismaService.user;
 
-  async login(userLogin: LoginAuthDto): Promise<LoginReturnType> {
+  async login(userLogin: LoginAuthDto): Promise<ResponseType<TokenReturnType>> {
     try {
       // 1. Get email and password from request validated
       const { email, password } = userLogin;
@@ -42,10 +40,9 @@ export class AuthService {
       if (!checkEmail) throw new UnauthorizedException('Email is not correct');
 
       // 3. Check password
-      const hash = await passwordService.hashing(password);
       const isCorrectPassword = await passwordService.compare(
+        password,
         checkEmail.password,
-        hash,
       );
       if (!isCorrectPassword)
         throw new UnauthorizedException('Password is not correct');
@@ -77,7 +74,9 @@ export class AuthService {
     }
   }
 
-  async register(userRegister: RegisterAuthDto): Promise<RegisterReturnType> {
+  async register(
+    userRegister: RegisterAuthDto,
+  ): Promise<ResponseType<RegisterType>> {
     try {
       // 1. Get new info user validated
       const { role, ...rawNewUser } = userRegister;
@@ -138,7 +137,7 @@ export class AuthService {
     }
   }
 
-  async refreshTokens(token: string): Promise<RefreshReturnType> {
+  async refreshTokens(token: string): Promise<ResponseType<TokenReturnType>> {
     // NOTE: Refactor code
     try {
       let userId: number;

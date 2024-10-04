@@ -6,46 +6,42 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-export class ResTypeDto<C> {
-  content: C;
-  status?: number;
-  message?: string;
-  date?: Date;
-
-  constructor(status: number, content: C, message?: string, date?: Date) {
-    this.status = status;
-    this.content = content;
-    this.message = message;
-    this.date = date || new Date();
-  }
-}
+import { ApiResponse } from 'src/shared/types/common/return.type';
 
 @Injectable()
-export class CustomResponseInterceptor<T extends Record<string, any>>
-  implements NestInterceptor<T, ResTypeDto<T | { data: T }>>
+export class ResponseInterceptor<T>
+  implements NestInterceptor<T, ApiResponse<T>>
 {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<ResTypeDto<T | { data: T }>> {
+  ): Observable<ApiResponse<T>> {
     return next.handle().pipe(
-      map((rawData: T) => {
-        // If the response already follows the ResTypeDto structure, return it directly.
-        if (rawData instanceof ResTypeDto) {
-          return rawData;
-        }
+      map((responseData) => {
         const status = context.switchToHttp().getResponse().statusCode;
-        const message = rawData.message || 'Success';
-        const content = 'data' in rawData ? rawData : { data: rawData };
 
-        // FIXME: Delete properties not use loop
-        if (content && typeof content === 'object') {
-          ['date', 'message'].forEach((e) => {
-            if (e in content) delete content[e];
-          });
+        let data = responseData;
+        let message = 'Successful';
+
+        if (responseData && typeof responseData === 'object') {
+          if ('message' in responseData) {
+            message = responseData.message;
+            delete responseData.message;
+          }
+
+          if ('data' in responseData) {
+            data = responseData.data;
+          }
         }
-        return new ResTypeDto(status, content, message, new Date());
+
+        return {
+          status,
+          content: {
+            data,
+          },
+          message,
+          date: new Date(),
+        };
       }),
     );
   }
