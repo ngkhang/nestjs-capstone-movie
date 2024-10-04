@@ -6,3 +6,30 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model role {
+  role_id    Int       @id @default(autoincrement())
+  name       String    @unique(map: "name") @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  user       user[]
+}
+
+model user {
+  user_id       Int       @id @default(autoincrement())
+  role_id       Int
+  username      String    @unique(map: "username") @db.VarChar(50)
+  email         String    @unique(map: "email") @db.VarChar(100)
+  password      String    @db.VarChar(255)
+  full_name     String    @db.VarChar(100)
+  refresh_token String?   @db.VarChar(255)
+  phone         String?   @db.VarChar(20)
+  dob           DateTime? @db.Date
+  address       String?   @db.Text
+  avatar        String?   @db.VarChar(255)
+  is_active     Boolean?  @default(true)
+  registered_at DateTime? @default(now()) @db.DateTime(0)
+  updated_at    DateTime? @db.DateTime(0)
+  role          role      @relation(fields: [role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "user_ibfk_1")
+
+  @@index([role_id], map: "role_id")
+}
