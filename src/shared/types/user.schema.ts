@@ -158,9 +158,24 @@ export class UpdateUserDtov2 extends OmitType(UserDto, [
 export class RegisterAuthDto extends CreateUserDto {}
 
 export class UpdateUserProfileDto {
+  @ApiProperty({
+    type: String,
+  })
   fullName?: string;
+  @ApiProperty({
+    type: String,
+  })
   phone?: string;
+  @ApiProperty({
+    type: String,
+  })
   dob?: string;
+  @ApiProperty({
+    type: String,
+  })
   address?: string;
+  @ApiProperty({
+    type: String,
+  })
   avatar?: string;
 }

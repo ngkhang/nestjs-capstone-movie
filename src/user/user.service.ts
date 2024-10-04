@@ -83,19 +83,19 @@ export class UserService {
   }
 
   // Get search user by name
-  async getUserByName(userName: string): Promise<ReturnType<UpdateUserDto[]>> {
+  async getUserByName(name: string): Promise<ReturnType<UpdateUserDto[]>> {
     try {
       const users = await this.userPrisma.findMany({
         where: {
           OR: [
             {
               username: {
-                contains: userName,
+                contains: name,
               },
             },
             {
               full_name: {
-                contains: userName,
+                contains: name,
               },
             },
           ],
@@ -112,7 +112,6 @@ export class UserService {
     }
   }
 
-  // FIXME: Update profile
   async updateProfile(
     userId: number,
     userInfo: UpdateUserProfileDto,
@@ -126,34 +125,29 @@ export class UserService {
     if (!currentInfo) throw new NotFoundException('Not found user');
 
     // 2. Format new data
-    // 3. Update
-    // 4. Get info user updated from db
     const newData: UpdateUserProfileDto = {};
 
     Object.entries(userInfo).forEach(([key, value]) => {
       if (!['string', ''].includes(value)) newData[key] = value;
     });
 
-    console.log(newData);
+    // 3. Update
     await this.userPrisma.update({
       where: {
         user_id: userId,
       },
-      data: { ...newData, dob: new Date(newData.dob) },
+      data: {
+        ...newData,
+        dob: newData.dob ? new Date(newData.dob) : currentInfo.dob,
+      },
     });
-
+    // 4. Get info user updated from db
     const newProfileUpdated = await this.userPrisma.findUnique({
       where: {
         user_id: userId,
       },
     });
-    // const newProfileUpdated2 = await this.userPrisma.findUnique({
-    //   where: {
-    //     user_id: userId,
-    //   },
-    //   include: { role: { select: { name: true } } },
-    // });
-    // console.log(newProfileUpdated2);
+
     return {
       data: {
         ...newProfileUpdated,
@@ -174,7 +168,7 @@ export class UserService {
       const user = await this.userPrisma.findUnique({
         where: { user_id: userId },
       });
-      if (!user) throw new NotFoundException('Not found');
+      if (!user) throw new NotFoundException('Not found user');
 
       // 2. Compare old password
       const isCorrectOldPassword = await passwordService.compare(
@@ -204,11 +198,10 @@ export class UserService {
     }
   }
 
-  // TODO: Upload for profile picture
   async uploadAvatar(
     fileURL: string,
     userId: number,
-  ): Promise<ReturnType<any>> {
+  ): Promise<ReturnType<string>> {
     const user = this.userPrisma.findUnique({
       where: {
         user_id: userId,
@@ -227,7 +220,7 @@ export class UserService {
     });
 
     return {
-      data: [],
+      data: fileURL,
       message: 'Upload successful',
     };
   }
