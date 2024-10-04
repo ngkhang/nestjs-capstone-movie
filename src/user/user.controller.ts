@@ -19,12 +19,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReturnType, TokenVerifyType } from 'src/shared/types/common.schema';
-import { ChangePasswordDto, UpdateUserDto } from './dto/update-user.dto';
-import { UpdateUserProfileDto, UserDto } from 'src/shared/types/user.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadDto } from './dto/avatar-user.dto';
 import storeService, { StorageName } from 'src/config/file-upload.service';
+import { ResponseType } from 'src/shared/types/common/return.type';
+import { TokenVerifyType } from 'src/shared/types/common/token.type';
+import { ChangePasswordDto, UpdateUserProfileDto } from './dto/update-user.dto';
+import { UserDto } from 'src/shared/types/user.dto';
 
 @ApiTags('User')
 @Controller('api/v1/users')
@@ -38,7 +39,9 @@ export class UserController {
     description: 'Success',
   })
   @Get('role')
-  async getAllRoles(): Promise<ReturnType<{ roleId: number; name: string }[]>> {
+  async getAllRoles(): Promise<
+    ResponseType<{ roleId: number; name: string }[]>
+  > {
     return this.userService.getAllRols();
   }
 
@@ -49,7 +52,7 @@ export class UserController {
     description: 'Success',
   })
   @Get()
-  async getAllUsers(): Promise<ReturnType<UpdateUserDto[]>> {
+  async getAllUsers(): Promise<ResponseType<UserDto[]>> {
     return this.userService.getAllUser();
   }
 
@@ -62,7 +65,7 @@ export class UserController {
   @Get('searchById')
   async getUserById(
     @Query('userId') userId: string,
-  ): Promise<ReturnType<UpdateUserDto>> {
+  ): Promise<ResponseType<UserDto>> {
     return this.userService.getUserById(+userId);
   }
 
@@ -75,7 +78,7 @@ export class UserController {
   @Get('searchByName')
   async getUserByName(
     @Query('name') name: string,
-  ): Promise<ReturnType<UpdateUserDto[]>> {
+  ): Promise<ResponseType<UserDto[]>> {
     return this.userService.getUserByName(name);
   }
 
@@ -91,7 +94,7 @@ export class UserController {
   async updateProfile(
     @Request() req: { user: TokenVerifyType },
     @Body() userInfo: UpdateUserProfileDto,
-  ): Promise<ReturnType<UserDto>> {
+  ): Promise<ResponseType<UserDto>> {
     return this.userService.updateProfile(req.user.userId, userInfo);
   }
 
@@ -107,7 +110,7 @@ export class UserController {
   async changePassword(
     @Request() req: { user: TokenVerifyType },
     @Body() body: ChangePasswordDto,
-  ) {
+  ): Promise<ResponseType<string>> {
     return this.userService.changePassword(req.user.userId, { ...body });
   }
 
@@ -128,7 +131,8 @@ export class UserController {
     @Request() req: { user: TokenVerifyType },
     @UploadedFile()
     file: Express.Multer.File,
-  ): Promise<ReturnType<string>> {
+  ): Promise<ResponseType<string>> {
+    console.log(file.filename);
     return this.userService.uploadAvatar(file.filename, req.user.userId);
   }
 }
