@@ -49,6 +49,7 @@ model cinema {
   is_deleted  Boolean?  @default(false)
   created_at  DateTime? @default(now()) @db.DateTime(0)
   cineplex    cineplex? @relation(fields: [cineplex_id], references: [cineplex_id], onDelete: NoAction, onUpdate: NoAction, map: "cinema_ibfk_1")
+  theater     theater[]
 
   @@index([cineplex_id], map: "cineplex_id")
 }
@@ -62,4 +63,55 @@ model cineplex {
   is_deleted  Boolean   @default(false)
   created_at  DateTime? @default(now()) @db.DateTime(0)
   cinema      cinema[]
+}
+
+model genre {
+  genre_id   Int       @id @default(autoincrement())
+  name       String    @unique(map: "name") @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  movie      movie[]
+}
+
+model movie {
+  movie_id          Int       @id @default(autoincrement())
+  genre_id          Int?
+  title             String    @unique(map: "title") @db.VarChar(255)
+  slug              String    @unique(map: "slug") @db.VarChar(100)
+  description       String?   @db.Text
+  short_description String?   @db.Text
+  duration          Int?
+  trailer           String?   @db.VarChar(255)
+  opening_date      DateTime? @db.DateTime(0)
+  poster_url        String?   @db.VarChar(255)
+  banner_url        String?   @db.VarChar(255)
+  is_now_showing    Boolean?  @default(false)
+  is_coming_soon    Boolean?  @default(false)
+  is_active         Boolean?  @default(true)
+  rating            Float?    @db.Float
+  created_at        DateTime? @default(now()) @db.DateTime(0)
+  genre             genre?    @relation(fields: [genre_id], references: [genre_id], onDelete: NoAction, onUpdate: NoAction, map: "movie_ibfk_1")
+
+  @@index([genre_id], map: "genre_id")
+}
+
+model theater {
+  theater_id      Int           @id @default(autoincrement())
+  theater_type_id Int?
+  cinema_id       Int
+  name            String        @db.VarChar(100)
+  height          Int
+  width           Int
+  created_at      DateTime?     @default(now()) @db.DateTime(0)
+  cinema          cinema        @relation(fields: [cinema_id], references: [cinema_id], onDelete: NoAction, onUpdate: NoAction, map: "theater_ibfk_1")
+  theater_type    theater_type? @relation(fields: [theater_type_id], references: [theater_type_id], onDelete: NoAction, onUpdate: NoAction, map: "theater_ibfk_2")
+
+  @@index([cinema_id], map: "cinema_id")
+  @@index([theater_type_id], map: "theater_type_id")
+}
+
+model theater_type {
+  theater_type_id Int       @id @default(autoincrement())
+  name            String    @unique(map: "name") @db.VarChar(50)
+  created_at      DateTime? @default(now()) @db.DateTime(0)
+  theater         theater[]
 }
