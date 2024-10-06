@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { CineplexModule } from './cineplex/cineplex.module';
 import { CinemaModule } from './cinema/cinema.module';
 import { TheaterModule } from './theater/theater.module';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TheaterModule } from './theater/theater.module';
     CineplexModule,
     CinemaModule,
     TheaterModule,
+    MovieModule,
   ],
   controllers: [],
   providers: [],
