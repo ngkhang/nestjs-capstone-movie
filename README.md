@@ -1,55 +1,35 @@
-# NestJS Capstone Movie
+# Movie Ticket Booking System
 
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+NOTE: Các table trong ED diagram như `booking`, `showtime`, `ticket`,`seat`, `seat_type` vẫn chưa được xử lý. Do đó, một số API chức năng vẫn chưa có.
 
-<p align="center">A progressive
-  <a href="http://nodejs.org" target="_blank">Node.js</a>
-  framework for building efficient and scalable server-side applications.
-</p>
+## Documents
 
-<p align="center">
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-  <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-  <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-  <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-</p>
+- Postman: [Capstone Movie collection](CapstoneBackendMovie.postman_collection.json)
+- Database: [db_nestjs_movie.sql](db_nestjs_movie.sql)
+- ER Diagram
 
-## Description
+![ER Diagram of Movie](./ER%20Diagram.png)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Installation
+## Technology Stack
 
-```bash
-npm install
-```
+- Core Framework: Nest.js with TypeScript
+- Database: MySQL with Prisma ORM
+- Authentication: JWT, Passport.js
+- Validation: class-validator
+- API Documentation: Swagger
+- File Upload: Multer
+- Security: Helmet, CORS, bcrypt
+- Clean code: ESLint, Prettier.
+- Git Hooks and Commit Management:
+  - Husky
+  - Lint-staged
+  - Commitizen
+  - Commitlint
 
-## Running the app
+---
 
-```bash
-# development
-npm run start
+## Author
 
-# watch mode
-npm run start:dev
-
-# production mode
-npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-npm run test
-
-# e2e tests
-npm run test:e2e
-
-# test coverage
-npm run test:cov
-```
+- Khang Nguyen: <ngkhang0220@gmail.com>
