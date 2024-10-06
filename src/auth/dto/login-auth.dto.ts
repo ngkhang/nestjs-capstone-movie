@@ -11,7 +11,7 @@ export class LoginAuthDto {
   email: string;
 
   @ApiProperty({
-    default: '123456',
+    default: '1234',
     type: String,
   })
   @IsNotEmpty()

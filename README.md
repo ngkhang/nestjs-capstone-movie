@@ -1,6 +1,8 @@
 # Movie Ticket Booking System
 
-NOTE: Các table trong ED diagram như `booking`, `showtime`, `ticket`,`seat`, `seat_type` vẫn chưa được xử lý. Do đó, một số API chức năng vẫn chưa có.
+#### NOTE
+
+Các table trong ED diagram như `booking`, `showtime`, `ticket`,`seat`, `seat_type` vẫn chưa được xử lý. Do đó, một số API chức năng vẫn chưa có.
 
 ## Documents
 
@@ -9,6 +11,8 @@ NOTE: Các table trong ED diagram như `booking`, `showtime`, `ticket`,`seat`, `
 - ER Diagram
 
 ![ER Diagram of Movie](./ER%20Diagram.png)
+
+- Link [Youtube: Demo Movie API](https://youtu.be/anZp2OSxhWA)
 
 ---
 
